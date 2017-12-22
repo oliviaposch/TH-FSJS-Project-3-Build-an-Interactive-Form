@@ -2,6 +2,7 @@ window.addEventListener('load', function(){
 
 /*****************
 	GLOBAL VARAIBLES
+	help links: https://www.smashingmagazine.com/2009/07/web-form-validation-best-practices-and-tutorials/#client-side-validation
 ******************/
 const inputTextField = document.querySelector('input[type=text]');// get first element textfield from form
 
@@ -104,12 +105,10 @@ const form = document.getElementsByTagName('form')[0];
 			}
 		})
 	})
-
 	function updateTotal(n){
 		total += +n;
 		output.innerHTML = total;
 	}
-
 
 /*****************
 	STEP 5 : PAYMENT INFO
@@ -142,6 +141,7 @@ const form = document.getElementsByTagName('form')[0];
 		return output.innerHTML >= '100';
 	}
 	function isValCCNumValid(ccnum){
+
 		return ccnum.value.length <= 16 && ccnum.value.length >= 13 && ccnum.value != -1 && ccnum.value.match(reg);
 	}
 	function isValZipValid(valzip){
@@ -182,26 +182,23 @@ const form = document.getElementsByTagName('form')[0];
 		}else{
 			document.getElementsByTagName('h2')[0].nextElementSibling.textContent = ''; 
 		}
-		if (!validValCCNum) {
+		if (selectpayment[0].selected && !validValCCNum) {
 			setErrorMessage(valCCNum, errorMessages[3])
 		}else{
 			clearError(valCCNum); 
-			
 		}
-		if (!validValZip) {
+		if (selectpayment[0].selected && !validValZip) {
 			setErrorMessage(valZip, errorMessages[4]);
 		}else{
 			clearError(valZip); 
-			
 		}
-		if (!validValCvv) {
+		if (selectpayment[0].selected && !validValCvv) {
 			setErrorMessage(valCvv, errorMessages[5]);
 		}else{
 			clearError(valCvv); 
-			
 		}
 
-		if (!validName || !validEmail || !validOutPut || !validValCCNum || !validValZip || !validValCvv) {
+		if (!validName || !validEmail || !validOutPut || selectpayment[0].selected && !validValCCNum || selectpayment[0].selected && !validValZip || selectpayment[0].selected && !validValCvv ) {
 			e.preventDefault();
 			return false;
 		}

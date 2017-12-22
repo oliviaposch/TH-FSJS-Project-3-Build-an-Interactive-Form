@@ -28,8 +28,8 @@ const valActivity = document.getElementsByClassName('activities');//form Validat
 const valCCNum = document.getElementById('cc-num');//form Validation accpet 13-16 digits numbers
 const valZip = document.getElementById('zip');//form Validation should accept 5 digit numbers
 const valCvv = document.getElementById('cvv');//form Validation accept just 3 digits numbers
-const submitButton = document.getElementsByTagName('button')[0];//form Validation
-
+//const submitButton = document.getElementsByTagName('button')[0];//form Validation
+const form = document.getElementsByTagName('form')[0];
 /*****************
 	STEP 1 : SET FOCUS IN THE FIRST INPUTFELD
 ******************/
@@ -124,103 +124,131 @@ const submitButton = document.getElementsByTagName('button')[0];//form Validatio
 						"please fill in your name here", 
 						"please, fill in your email correct here", 
 						"you have to select at least one activity",
-						"fill in correct your Credit Card Number", 
+						"fill in correct your Credit Card Number it accept 13 - 16 digits", 
 						"Zip must to be just 5 digits numbers", 
 						"CVV accept just 3 digits Numbers",
 						"Please fill in the require(*) Information"
 						];
 
-	function submitBtnEnable(){
-		submitButton.disabled = false;
-		submitButton.addClass = '';
-		submitButton.nextElementSibling.textContent = '';
-	}
-	function submitBtnDisable(){
-		submitButton.disabled = true;
-		submitButton.className = 'disable';
-		submitButton.nextElementSibling.textContent = errorMessages[6];
-	}
-		//check name Input
-			valName.addEventListener('blur', function(e){
-				e.preventDefault();
-				if(this.value !== ''){
-					this.nextElementSibling.textContent = '';
-					this.className = '';
-					submitBtnEnable();
-				}else{
-					
-					this.nextElementSibling.textContent = errorMessages[0];
-					this.className = 'errorborder';
-					submitBtnDisable();
-				}
-			});
-			// proof email if it has @ and .com exmple
-			valEmail.addEventListener('keyup', function(e){
-				e.preventDefault();
-				if(this.value.indexOf('@') != -1 && this.value.indexOf('.') != -1){
-					this.nextElementSibling.textContent = '';
-					this.className = '';
-					submitBtnEnable();
-				}else{
-					this.nextElementSibling.textContent = errorMessages[1];
-					this.className = 'errorborder';
-					submitBtnDisable();
-				}
-			});
+	const reg = /^\d+$/;
 
-			const reg = /^\d+$/;
-			//credit card numbers between 13 and 16 digits
-			valCCNum.addEventListener('keyup', function(e){
-				e.preventDefault();
-				if (this.value.length <= 16 && this.value.length >= 13 && this.value != -1 && this.value.match(reg)) {
-					this.nextElementSibling.textContent = '';
-					this.className = '';
-					submitBtnEnable();
-				}
-				else{
-					this.nextElementSibling.textContent = errorMessages[3];
-					this.className = 'errorborder';
-					submitBtnDisable();
-				}
-			});
-			//5 digit number
-			valZip.addEventListener('keyup', function(e){
-				e.preventDefault();
-				if (this.value.length === 5 && this.value.match(reg)) {
-					this.nextElementSibling.textContent = '';
-					this.className = ''; 
-					submitBtnEnable();
-				}else{
-					this.nextElementSibling.textContent = errorMessages[4];
-					this.className = 'errorborder';
-					submitBtnDisable();
+	function isEmailValid(email){
+		return email.indexOf('@') != -1 && email.indexOf('.') != -1;
+	}
+	function isNameValid(name){
+		return name != '';
+	}
+	function isOutPutValid(output){
+		return output.innerHTML >= '100';
+	}
+	function isValCCNumValid(ccnum){
+		return ccnum.value.length <= 16 && ccnum.value.length >= 13 && ccnum.value != -1 && ccnum.value.match(reg);
+	}
+	function isValZipValid(valzip){
+		return valzip.value.length === 5 && valzip.value.match(reg);
+	}
+	function isValCvvValid(valcvv){
+		return valcvv.value.length === 3 && valcvv.value.match(reg);
+	}
+	function setErrorMessage(el, errorMessage){
+		el.nextElementSibling.textContent = errorMessage;
+		el.className = 'errorborder';
+	}
+	function clearError(el){
+		el.nextElementSibling.textContent = '';
+		el.className = '';
+	}				
+// ON SUBMIT EVENTLISTENER
+	form.addEventListener('submit', function(e){
+		const validName = isNameValid(valName.value);
+		const validEmail = isEmailValid(valEmail.value);
+		const validOutPut = isOutPutValid(output);
+		const validValCCNum = isValCCNumValid(valCCNum);
+		const validValZip = isValZipValid(valZip);
+		const validValCvv = isValCvvValid(valCvv);
+
+		if(!validName){
+			setErrorMessage(valName, errorMessages[0]);
+		}else{
+			clearError(valName); 
+		}
+		if (!validEmail) {
+			setErrorMessage(valEmail, errorMessages[1]);
+		}else{
+			clearError(valEmail);
+		}
+		if (!validOutPut) {
+			document.getElementsByTagName('h2')[0].nextElementSibling.textContent = errorMessages[2];
+		}else{
+			document.getElementsByTagName('h2')[0].nextElementSibling.textContent = ''; 
+		}
+		if (!validValCCNum) {
+			setErrorMessage(valCCNum, errorMessages[3])
+		}else{
+			clearError(valCCNum); 
+			
+		}
+		if (!validValZip) {
+			setErrorMessage(valZip, errorMessages[4]);
+		}else{
+			clearError(valZip); 
+			
+		}
+		if (!validValCvv) {
+			setErrorMessage(valCvv, errorMessages[5]);
+		}else{
+			clearError(valCvv); 
+			
+		}
+
+		if (!validName || !validEmail || !validOutPut || !validValCCNum || !validValZip || !validValCvv) {
+			e.preventDefault();
+			return false;
+		}
+
+	})
+
+	/*BEFORE SUBMIT EVENTlisten*/
+		valName.addEventListener('blur', function(e){
+			if(this.value !== ''){
+				clearError(this);
+			}else{	
+				setErrorMessage(this, errorMessages[0])
+			}
+		});
+		// proof email if it has @ and .com exmple
+		valEmail.addEventListener('keyup', function(e){	
+			if(this.value.indexOf('@') != -1 && this.value.indexOf('.') != -1){
+				clearError(this);
+			}else{
+				setErrorMessage(this, errorMessages[1])
+			}
+		});			
+		//credit card numbers between 13 and 16 digits
+		valCCNum.addEventListener('keyup', function(e){	
+			if (this.value.length <= 16 && this.value.length >= 13 && this.value.match(reg)) {
+				clearError(this);
+			}
+			else{
+				setErrorMessage(this, errorMessages[3])
+			}
+		});
+		//5 digit number
+		valZip.addEventListener('keyup', function(e){		
+			if (this.value.length === 5 && this.value.match(reg)) {
+				clearError(this);
+			}else{
+				setErrorMessage(this, errorMessages[4])
 				}
 			}) 
 			//cvv only 3 digits numbers
-			valCvv.addEventListener('keyup', function(e){
-				e.preventDefault();
-				if (this.value.length === 3 && this.value.match(reg)) {
-					this.nextElementSibling.textContent = '';
-					this.className = '';
-					submitBtnEnable();
-				}else{
-					this.nextElementSibling.textContent = errorMessages[5];
-					this.className = 'errorborder';
-					submitBtnDisable();
-				}
-			})
-			
-			submitButton.addEventListener('click', function(e){
-				submitButton.disabled = false;
-				if (output.innerHTML >= '100') {
-					document.getElementsByTagName('h2')[0].nextElementSibling.textContent = '';
-					submitBtnEnable();
-				}else{
-					document.getElementsByTagName('h2')[0].nextElementSibling.textContent = errorMessages[2];
-					submitBtnDisable();
-				}
-								
-			})
+		valCvv.addEventListener('keyup', function(e){
+			if (this.value.length === 3 && this.value.match(reg)) {
+				clearError(this);
+			}else{
+				setErrorMessage(this, errorMessages[5]);
+			}
+		})		
 
 /*EVENTLISTENER TO PAY OPTIONS*/
  	selectpayment.addEventListener('change', (e) => {
