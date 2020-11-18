@@ -152,7 +152,9 @@ button:hover {
 .credit-card {
 	margin-top: 1.25em;
 }
-
+p.success {
+    color: #308e30;
+}
 /* ================================= 
   Helper Classes
 ==================================== */

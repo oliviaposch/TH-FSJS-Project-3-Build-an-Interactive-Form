@@ -15,7 +15,8 @@ const newSelectColorsOption = document.createElement('option'); //color divs opt
 const selectDesign = document.getElementById('design');//color divs optionsdesign
 
 const activityElements = document.querySelector('.activities'); //checkboxes activities
-const actElem = activityElements.children; //checkboxes activities
+const actElem = activityElements.children; //checkboxes activities 
+const checkboxes = document.querySelectorAll('.payment'); console.log(checkboxes.length);
 const paymentInputs = Array.from(document.getElementsByClassName('payment'));//checkboxes activities Payment
 const output = document.getElementById('total'); //checkboxes activities payment
 
@@ -160,7 +161,7 @@ const form = document.getElementsByTagName('form')[0];
 	}				
 // ON SUBMIT EVENTLISTENER
 	form.addEventListener('submit', function(e){
-		const validName = isNameValid(valName.value);
+		const validName = isNameValid(valName.value); 
 		const validEmail = isEmailValid(valEmail.value);
 		const validOutPut = isOutPutValid(output);
 		const validValCCNum = isValCCNumValid(valCCNum);
@@ -201,10 +202,22 @@ const form = document.getElementsByTagName('form')[0];
 		if (!validName || !validEmail || !validOutPut || selectpayment[0].selected && !validValCCNum || selectpayment[0].selected && !validValZip || selectpayment[0].selected && !validValCvv ) {
 			e.preventDefault();
 			return false;
+		} else{
+			e.preventDefault();
+			inputTextField.value = '';
+			valEmail.value = '';
+			//uncheck checkboxes after submit
+			for(let i = 0; i < checkboxes.length; i++ ){
+				//console.log(checkboxes[i]);
+				checkboxes[i].checked = false;
+			}
+			output.innerHTML = '0';
+			document.querySelector('.success').textContent = 'Thanks! it has been sent successfully!'
 		}
+	
 
 	})
-
+	
 	/*BEFORE SUBMIT EVENTlisten*/
 		valName.addEventListener('blur', function(e){
 			if(this.value !== ''){
